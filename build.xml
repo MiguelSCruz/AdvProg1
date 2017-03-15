@@ -1,0 +1,7 @@
+<project name="advprog1">
+  <target >
+    <jar>
+	  <zipgroup />
+	</jar>
+  </target>
+</project>
