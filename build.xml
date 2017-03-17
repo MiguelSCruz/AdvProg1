@@ -1,7 +1,43 @@
-<project name="advprog1">
-  <target >
-    <jar>
-	  <zipgroup />
-	</jar>
-  </target>
+<project name="lab01"   basedir=".">
+    <description>
+        lab01 build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" value="src"/>
+    <property name="classes" value="classes"/>
+    <property name="pkg"    value="ist.meic.pa"/>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the classes directory structure used by compile -->
+        <mkdir dir="${classes}"/>
+    </target>
+
+    <target name="clean"    description="clean">
+        <!-- Delete the ${classes} directory trees -->
+        <delete dir="${classes}"/>
+    </target>
+
+    <target name="compile"  description="compile the source"    depends="init">
+        <!-- Compile the java code from ${src} into ${classes} -->
+        <javac srcdir="${src}" destdir="${classes}"/>
+    </target>
+
+    <target name="run"  description="runs the program"  depends="compile">
+        <!-- Runs the java app -->
+        <java classname="${pkg}.KeyConstructors">
+            <classpath>
+                <pathelement path="${classes}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="jar">
+        <jar destfile="keyword.jar" basedir="classes">
+            <zipgroupfileset dir="lib" includes="*.jar"/>
+        </jar>
+    </target>
+
+
 </project>
