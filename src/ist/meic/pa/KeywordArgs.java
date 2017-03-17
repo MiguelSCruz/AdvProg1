@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(ElementType.CONSTRUCTOR)
 public @interface KeywordArgs {
     String value();
 }
