@@ -30,6 +30,7 @@
             <classpath>
                 <pathelement path="${classes}"/>
             </classpath>
+            <arg value="Test"/>
         </java>
     </target>
 
