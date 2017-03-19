@@ -27,7 +27,7 @@ public class KeyConstructors {
     public static void assigner(CtConstructor ctConstructor) throws ClassNotFoundException{
         KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
         String value = annotation.value();
-
+        String[] splitedString = value.split(",");
     }
 
 }
