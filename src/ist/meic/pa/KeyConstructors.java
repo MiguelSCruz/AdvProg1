@@ -5,36 +5,39 @@ package ist.meic.pa;
 
 import javassist.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class KeyConstructors {
 
-    public static void main (String[] args) throws NotFoundException, ClassNotFoundException{
+    public static void main (String[] args) throws NotFoundException,
+            ClassNotFoundException, CannotCompileException{
         if (args.length != 1){
             System.err.println("Usage: java ist.meic.pa.KeyConstructors <Class>");
             System.exit(1);
         }
-
+        Translator translator = new ClassTranslater();
         ClassPool classPool = ClassPool.getDefault();
-        CtClass ctClass = classPool.get(args[0]);
+        Loader classLoader = new Loader(classPool);
+        classLoader.addTranslator(classPool, translator);
+        try{
+            classLoader.run(args[0], null);
+        } catch (Throwable throwable){
+            System.err.println("Target class error: " + throwable);
+        }
+
+
+        /* SHIT THAT MAY BE USED FIXME
         CtConstructor[] ctConstructors = ctClass.getConstructors();
         for (CtConstructor ctConstructor: ctConstructors){
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
                 assigner(ctConstructor);
             }
         }
+        */
 
     }
 
-    public static void assigner(CtConstructor ctConstructor) throws ClassNotFoundException{
-        KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
-        String value = annotation.value();
-        String[] splitString = value.split(",");
-        for (String s: splitString){
-            try {
-                ctConstructor.insertBeforeBody(s + ";\n");
-            } catch (CannotCompileException e){
-                System.err.println("Cannot compile annotation: " + e);
-            }
-        }
-    }
+
 
 }
