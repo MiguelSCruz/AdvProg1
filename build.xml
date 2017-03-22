@@ -21,7 +21,8 @@
 
     <target name="compile"  description="compile the source"    depends="init">
         <!-- Compile the java code from ${src} into ${classes} -->
-        <javac srcdir="${src}" destdir="${classes}"/>
+        <javac srcdir="${src}" destdir="${classes}" classpath="lib/javassist.jar"/>
+
     </target>
 
     <target name="run"  description="runs the program"  depends="compile">

@@ -2,6 +2,8 @@ package ist.meic.pa;
 
 import javassist.*;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by miguelcruz on 21-03-2017.
  */
@@ -24,22 +26,25 @@ public class ClassTranslater implements Translator {
         for (CtConstructor ctConstructor: ctClass.getConstructors()){
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
                 try {
-                    assigner(ctConstructor);
-                } catch (ClassNotFoundException e){
+                    assigner(ctClass, ctConstructor);
+                } catch (ClassNotFoundException | CannotCompileException e){
                     throw new RuntimeException(e);
                 }
             }
         }
     }
 
-    public void assigner(CtConstructor ctConstructor)
-            throws ClassNotFoundException{
+    public void assigner(CtClass ctClass, CtConstructor ctConstructor)
+            throws ClassNotFoundException, CannotCompileException{
 
         KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
         /* FIXME Insert parser
         String value = annotation.value();
         String[] splitString = value.split(",");
         */
-        
+        CtField ctField = CtField.make("for (int i = 0; i < $1.length - 1; i=i+2){\n" +
+                "            this.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);            \n" +
+                "        }", ctClass);
+
     }
 }
