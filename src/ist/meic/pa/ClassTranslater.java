@@ -41,10 +41,8 @@ public class ClassTranslater implements Translator {
             throws ClassNotFoundException, CannotCompileException{
 
         KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
-        /* FIXME Insert parser
         String value = annotation.value();
-        String[] splitString = value.split(",");
-        */
+        
         CtField ctField = CtField.make("for (int i = 0; i < $1.length - 1; i=i+2){\n" +
                 "            $0.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);            \n" +
                 "        }", ctClass);
