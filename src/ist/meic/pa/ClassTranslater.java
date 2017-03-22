@@ -3,6 +3,9 @@ package ist.meic.pa;
 import javassist.*;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by miguelcruz on 21-03-2017.
@@ -43,8 +46,20 @@ public class ClassTranslater implements Translator {
         String[] splitString = value.split(",");
         */
         CtField ctField = CtField.make("for (int i = 0; i < $1.length - 1; i=i+2){\n" +
-                "            this.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);            \n" +
+                "            $0.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);            \n" +
                 "        }", ctClass);
 
+    }
+
+    public Map<String, Object> annotationParser(String args){
+        Map<String, Object> argsMap = new HashMap<>();
+        String[] splitString = args.split(",");
+        for (String pair: splitString){
+            String[] splitPair = pair.split("=");
+            if (splitPair.length == 2){
+                argsMap.put(splitPair[0], splitPair[1]);
+            }
+        }
+        return argsMap;
     }
 }
