@@ -26,11 +26,12 @@ public class ClassTranslator implements Translator {
     public void assignConstructors(CtClass ctClass) {
         for (CtConstructor ctConstructor: ctClass.getConstructors()){
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
+                /* FIXME When called fucks the target class
                 try {
                     assigner(ctClass, ctConstructor);
                 } catch (ClassNotFoundException | CannotCompileException | NotFoundException e){
                     throw new RuntimeException(e);
-                }
+                }*/
             }
         }
     }

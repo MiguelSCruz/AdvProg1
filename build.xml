@@ -27,7 +27,7 @@
 
     <target name="testsCompile"  description="compile the tests"    depends="init">
         <!-- Compile the java code from ${src} into ${classes} -->
-        <javac srcdir="Tests" destdir="${classes}"/>
+        <javac srcdir="Tests" destdir="Tests" classpath="${classes}"/>
 
     </target>
 
