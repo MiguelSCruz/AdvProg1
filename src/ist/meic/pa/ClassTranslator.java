@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Created by miguelcruz on 21-03-2017.
  */
-public class ClassTranslater implements Translator {
+public class ClassTranslator implements Translator {
 
     @Override
     public void start(ClassPool classPool)

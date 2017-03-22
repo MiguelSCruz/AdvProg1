@@ -18,7 +18,7 @@ public class KeyConstructors {
             System.exit(1);
         }
 
-        Translator translator = new ClassTranslater();
+        Translator translator = new ClassTranslator();
         ClassPool classPool = ClassPool.getDefault();
         Loader classLoader = new Loader(classPool);
         classLoader.addTranslator(classPool, translator);
