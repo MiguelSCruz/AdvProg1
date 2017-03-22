@@ -26,12 +26,11 @@ public class ClassTranslator implements Translator {
     public void assignConstructors(CtClass ctClass) {
         for (CtConstructor ctConstructor: ctClass.getConstructors()){
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
-                /* FIXME When called fucks the target class
                 try {
                     assigner(ctClass, ctConstructor);
                 } catch (ClassNotFoundException | CannotCompileException | NotFoundException e){
                     throw new RuntimeException(e);
-                }*/
+                }
             }
         }
     }
@@ -53,7 +52,7 @@ public class ClassTranslator implements Translator {
 
 
         ctConstructor.insertAfter("for (int i = 0; i < $1.length - 1; i=i+2){" +
-                                            "$0.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);" +
+                                            "$0.getClass().getDeclaredField((String)$1[i]).set($0, $1[i+1]);" +
                                         "}");
 
 
