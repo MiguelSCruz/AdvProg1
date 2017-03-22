@@ -25,21 +25,37 @@
 
     </target>
 
+    <target name="testsCompile"  description="compile the tests"    depends="init">
+        <!-- Compile the java code from ${src} into ${classes} -->
+        <javac srcdir="Tests" destdir="${classes}"/>
+
+    </target>
+
+
+
     <target name="run"  description="runs the program"  depends="compile">
         <!-- Run the java app -->
         <java classname="${pkg}.KeyConstructors">
             <classpath>
-                <pathelement path="${classes}"/>
+                <pathelement path="${classes}:lib/javassist.jar"/>
             </classpath>
-            <arg value="Test"/>
+            <arg value="TestA"/>
         </java>
     </target>
 
     <target name="jar">
         <jar destfile="keyword.jar" basedir="classes">
             <zipgroupfileset dir="lib" includes="*.jar"/>
+            <manifest>
+                <attribute name="Main-Class" value="${pkg}.KeyConstructors"/>
+            </manifest>
         </jar>
     </target>
 
+    <target name="runJar" depends="jar">
+        <java jar="keyword.jar" fork="true">
+            <arg line="TestA"/>
+        </java>
+    </target>
 
 </project>

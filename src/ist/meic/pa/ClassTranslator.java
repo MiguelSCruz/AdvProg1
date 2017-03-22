@@ -2,10 +2,8 @@ package ist.meic.pa;
 
 import javassist.*;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by miguelcruz on 21-03-2017.
@@ -30,7 +28,7 @@ public class ClassTranslator implements Translator {
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
                 try {
                     assigner(ctClass, ctConstructor);
-                } catch (ClassNotFoundException | CannotCompileException e){
+                } catch (ClassNotFoundException | CannotCompileException | NotFoundException e){
                     throw new RuntimeException(e);
                 }
             }
@@ -38,26 +36,42 @@ public class ClassTranslator implements Translator {
     }
 
     public void assigner(CtClass ctClass, CtConstructor ctConstructor)
-            throws ClassNotFoundException, CannotCompileException{
+            throws ClassNotFoundException, CannotCompileException, NotFoundException{
 
         KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
+
         String value = annotation.value();
-        
-        CtField ctField = CtField.make("for (int i = 0; i < $1.length - 1; i=i+2){\n" +
-                "            $0.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);            \n" +
-                "        }", ctClass);
+        Map<String, String> pairs = annotationParser(value);
+
+        if (!pairs.isEmpty()) {
+            for (String s : pairs.keySet()) {
+                if (pairs.get(s) != null)
+                    ctConstructor.insertBefore(s + "=" + pairs.get(s) + ";");
+            }
+        }
+
+
+        ctConstructor.insertAfter("for (int i = 0; i < $1.length - 1; i=i+2){" +
+                                            "$0.getClass().getDeclaredField($1[i]).set($0, $1[i+1]);" +
+                                        "}");
+
 
     }
 
-    public Map<String, Object> annotationParser(String args){
-        Map<String, Object> argsMap = new HashMap<>();
+    public Map<String, String> annotationParser(String args){
+        Map<String, String> argsMap = new HashMap<>();
         String[] splitString = args.split(",");
         for (String pair: splitString){
             String[] splitPair = pair.split("=");
             if (splitPair.length == 2){
+                //Object result = evaluate(splitPair[1]);
                 argsMap.put(splitPair[0], splitPair[1]);
+            }
+            else{
+                argsMap.put(splitPair[0], null);
             }
         }
         return argsMap;
     }
+
 }

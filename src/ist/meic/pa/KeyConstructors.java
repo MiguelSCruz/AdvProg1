@@ -5,8 +5,6 @@ package ist.meic.pa;
 
 import javassist.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class KeyConstructors {
 
