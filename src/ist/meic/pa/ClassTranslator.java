@@ -38,19 +38,29 @@ public class ClassTranslator implements Translator {
     public void assigner(CtClass ctClass, CtConstructor ctConstructor)
             throws ClassNotFoundException, CannotCompileException, NotFoundException{
 
-        KeywordArgs annotation = (KeywordArgs) ctConstructor.getAnnotation(KeywordArgs.class);
+        KeywordArgs annotation;
+        Map<String, String> pairs = new HashMap<>();
 
-        String value = annotation.value();
-        Map<String, String> pairs = annotationParser(value);
+        while (ctClass != null) {
+            for (CtConstructor constructor: ctClass.getConstructors()) {
+                if (constructor.hasAnnotation(KeywordArgs.class)) {
+                    annotation = (KeywordArgs) constructor.getAnnotation(KeywordArgs.class);
+                    String value = annotation.value();
+                    annotationParser(value, pairs);
+                }
+            }
+            ctClass = ctClass.getSuperclass();
+        }
 
         if (!pairs.isEmpty()) {
             for (String s : pairs.keySet()) {
-                if (pairs.get(s) != null)
+                if (pairs.get("s") != null);
                     ctConstructor.insertBefore(s + "=" + pairs.get(s) + ";");
+//                    System.out.println("Key: " + "s" + " === Value: " + pairs.get(s));
             }
         }
 
-
+//          FIXME
         ctConstructor.insertAfter("for (int i = 0; i < $1.length - 1; i=i+2){" +
                                             "$0.getClass().getDeclaredField((String)$1[i]).set($0, $1[i+1]);" +
                                         "}");
@@ -58,20 +68,19 @@ public class ClassTranslator implements Translator {
 
     }
 
-    public Map<String, String> annotationParser(String args){
-        Map<String, String> argsMap = new HashMap<>();
+    public void annotationParser(String args, Map<String, String> argsMap){
         String[] splitString = args.split(",");
         for (String pair: splitString){
             String[] splitPair = pair.split("=");
-            if (splitPair.length == 2){
-                //Object result = evaluate(splitPair[1]);
-                argsMap.put(splitPair[0], splitPair[1]);
-            }
-            else{
-                argsMap.put(splitPair[0], null);
+            if (!argsMap.containsKey(splitPair[0])){
+                if (splitPair.length == 2)
+                    argsMap.put(splitPair[0], splitPair[1]);
+                else{
+                    if (!argsMap.containsKey(splitPair[0]))
+                        argsMap.put(splitPair[0], null);
+                }
             }
         }
-        return argsMap;
     }
 
 }

@@ -10,7 +10,7 @@
 
     <target name="clean"    description="clean">
         <!-- Delete the ${classes} directory trees -->
-        <delete dir="${classes}"/>
+        <delete dir="${classes}" file="keyword.jar"/>
     </target>
 
     <target name="init" depends="clean">
