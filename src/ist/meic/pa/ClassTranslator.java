@@ -5,6 +5,8 @@ import javassist.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javassist.CtNewConstructor.defaultConstructor;
+
 /**
  * Created by miguelcruz on 21-03-2017.
  */
@@ -27,6 +29,7 @@ public class ClassTranslator implements Translator {
         for (CtConstructor ctConstructor: ctClass.getConstructors()){
             if (ctConstructor.hasAnnotation(KeywordArgs.class)){
                 try {
+                    ctClass.addConstructor(defaultConstructor(ctClass));
                     assigner(ctClass, ctConstructor);
                 } catch (ClassNotFoundException | CannotCompileException | NotFoundException e){
                     throw new RuntimeException(e);
@@ -40,6 +43,7 @@ public class ClassTranslator implements Translator {
 
         KeywordArgs annotation;
         Map<String, String> pairs = new HashMap<>();
+        String template= "{";
 
         while (ctClass != null) {
             for (CtConstructor constructor: ctClass.getConstructors()) {
@@ -54,17 +58,33 @@ public class ClassTranslator implements Translator {
 
         if (!pairs.isEmpty()) {
             for (String s : pairs.keySet()) {
-                if (pairs.get("s") != null);
-                    ctConstructor.insertBefore(s + "=" + pairs.get(s) + ";");
-//                    System.out.println("Key: " + "s" + " === Value: " + pairs.get(s));
+                if (pairs.get(s) != null) {
+                    template = template + s + "=" + pairs.get(s) + ";\n";
+                }
             }
         }
 
 //          FIXME
-        ctConstructor.insertAfter("for (int i = 0; i < $1.length - 1; i=i+2){" +
-                                            "$0.getClass().getDeclaredField((String)$1[i]).set($0, $1[i+1]);" +
-                                        "}");
+        template = template +   "for (int i = 0; i < $1.length - 1; i=i+2){\n" +
+                                    "Class myClass = $0.getClass();\n" +
+                                    "while (myClass != Object.class) {\n" +
+                                        "try {\n" +
+                                            "myClass.getDeclaredField((String) $1[i]).setAccessible(true);\n" +
+                                            "myClass.getDeclaredField((String) $1[i]).set($0, $1[i+1]);\n" +
+                                        "} catch (NoSuchFieldException e) {\n" +
+                                            "myClass = myClass.getSuperclass();\n" +
+                                        "} catch (IllegalAccessException e) {\n" +
+                                            "throw new RuntimeException(e);\n" +
+                                        "}\n" +
+                                    "}\n" +
+                                "}";
 
+
+
+
+        template = template + "}";
+        System.out.println(template);
+        ctConstructor.setBody(template);
 
     }
 
