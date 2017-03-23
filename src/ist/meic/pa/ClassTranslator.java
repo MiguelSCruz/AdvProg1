@@ -71,6 +71,7 @@ public class ClassTranslator implements Translator {
                                         "try {\n" +
                                             "myClass.getDeclaredField((String) $1[i]).setAccessible(true);\n" +
                                             "myClass.getDeclaredField((String) $1[i]).set($0, $1[i+1]);\n" +
+                                            "myClass.getSuperclass();\n" +
                                         "} catch (NoSuchFieldException e) {\n" +
                                             "myClass = myClass.getSuperclass();\n" +
                                         "} catch (IllegalAccessException e) {\n" +
