@@ -64,7 +64,6 @@ public class ClassTranslator implements Translator {
             }
         }
 
-//          FIXME
         template = template +   "for (int i = 0; i < $1.length - 1; i=i+2){\n" +
                                     "Class myClass = $0.getClass();\n" +
                                     "while (myClass != Object.class) {\n" +
@@ -72,8 +71,7 @@ public class ClassTranslator implements Translator {
                                         "try {\n" +
                                             "myClass.getDeclaredField((String) $1[i]).setAccessible(true);\n" +
                                             "myClass.getDeclaredField((String) $1[i]).set($0, $1[i+1]);\n" +
-                                            "myClass.getSuperclass();\n" +
-											"myClass = myClass.getSuperclass();\n" +
+                                            "break;\n" +
                                         "} catch (NoSuchFieldException e) {\n" +
                                             "myClass = myClass.getSuperclass();\n" +
                                         "} catch (IllegalAccessException e) {\n" +
@@ -82,11 +80,7 @@ public class ClassTranslator implements Translator {
                                     "}\n" +
                                 "}";
 
-
-
-
         template = template + "}";
-        //System.out.println(template);
         ctConstructor.setBody(template);
 
     }
