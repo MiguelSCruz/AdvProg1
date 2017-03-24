@@ -89,7 +89,7 @@ public class ClassTranslator implements Translator {
         String[] splitString = args.split(",");
         for (String pair: splitString){
             String[] splitPair = pair.split("=");
-            if (!argsMap.containsKey(splitPair[0])){
+            if (!argsMap.containsKey(splitPair[0]) || argsMap.get(splitPair[0]) == null){
                 if (splitPair.length == 2)
                     argsMap.put(splitPair[0], splitPair[1]);
                 else{
