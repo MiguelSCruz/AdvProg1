@@ -19,8 +19,7 @@ public class ClassTranslator implements Translator {
     }
 
     @Override
-    public void onLoad(ClassPool classPool, String s)
-            throws NotFoundException, CannotCompileException {
+    public void onLoad(ClassPool classPool, String s) throws NotFoundException {
         CtClass ctClass = classPool.get(s);
         assignConstructors(ctClass);
     }
@@ -39,7 +38,7 @@ public class ClassTranslator implements Translator {
     }
 
     public void assigner(CtClass ctClass, CtConstructor ctConstructor)
-            throws ClassNotFoundException, CannotCompileException, NotFoundException{
+            throws ClassNotFoundException, CannotCompileException, NotFoundException, RuntimeException{
 
         KeywordArgs annotation;
         Map<String, String> pairs = new HashMap<>();
@@ -67,7 +66,6 @@ public class ClassTranslator implements Translator {
         template = template +   "for (int i = 0; i < $1.length - 1; i=i+2){\n" +
                                     "Class myClass = $0.getClass();\n" +
                                     "while (myClass != Object.class) {\n" +
-										//"System.err.println(myClass);"+
                                         "try {\n" +
                                             "myClass.getDeclaredField((String) $1[i]).setAccessible(true);\n" +
                                             "myClass.getDeclaredField((String) $1[i]).set($0, $1[i+1]);\n" +
@@ -77,6 +75,9 @@ public class ClassTranslator implements Translator {
                                         "} catch (IllegalAccessException e) {\n" +
                                             "throw new RuntimeException(e);\n" +
                                         "}\n" +
+                                    "}\n" +
+                                    "if (myClass == Object.class){\n" +
+                                        "throw new RuntimeException(\"Unrecognized keyword: \" + $1[i]);\n" +
                                     "}\n" +
                                 "}";
 

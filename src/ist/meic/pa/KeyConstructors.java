@@ -9,7 +9,7 @@ import javassist.*;
 public class KeyConstructors {
 
     public static void main (String[] args)
-            throws NotFoundException, ClassNotFoundException, CannotCompileException{
+            throws NotFoundException, CannotCompileException{
 
         if (args.length != 1){
             System.err.println("Usage: java ist.meic.pa.KeyConstructors <Class>");
