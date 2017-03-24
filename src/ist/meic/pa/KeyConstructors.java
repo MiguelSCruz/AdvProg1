@@ -24,7 +24,8 @@ public class KeyConstructors {
         try{
             classLoader.run(args[0], null);
         } catch (Throwable throwable){
-            System.err.println("Target class error: " + throwable);
+            System.err.println("Exception in thread \"main\": " + throwable);
+            throwable.printStackTrace();
         }
     }
 

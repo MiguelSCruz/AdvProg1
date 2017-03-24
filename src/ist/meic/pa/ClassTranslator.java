@@ -72,12 +72,12 @@ public class ClassTranslator implements Translator {
                                             "break;\n" +
                                         "} catch (NoSuchFieldException e) {\n" +
                                             "myClass = myClass.getSuperclass();\n" +
+                                            "if (myClass == Object.class) {\n" +
+                                                "throw new RuntimeException(\"Unrecognized keyword: \" + $1[i]);\n" +
+                                            "}" +
                                         "} catch (IllegalAccessException e) {\n" +
                                             "throw new RuntimeException(e);\n" +
                                         "}\n" +
-                                    "}\n" +
-                                    "if (myClass == Object.class){\n" +
-                                        "throw new RuntimeException(\"Unrecognized keyword: \" + $1[i]);\n" +
                                     "}\n" +
                                 "}";
 
