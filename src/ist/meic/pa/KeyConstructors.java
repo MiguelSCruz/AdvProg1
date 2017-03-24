@@ -9,7 +9,7 @@ import javassist.*;
 public class KeyConstructors {
 
     public static void main (String[] args)
-            throws NotFoundException, CannotCompileException{
+            throws Throwable{
 
         if (args.length != 1){
             System.err.println("Usage: java ist.meic.pa.KeyConstructors <Class>");
@@ -20,13 +20,7 @@ public class KeyConstructors {
         ClassPool classPool = ClassPool.getDefault();
         Loader classLoader = new Loader(classPool);
         classLoader.addTranslator(classPool, translator);
-
-        try{
-            classLoader.run(args[0], null);
-        } catch (Throwable throwable){
-            System.err.println("Exception in thread \"main\": " + throwable);
-            throwable.printStackTrace();
-        }
+        classLoader.run(args[0], null);
     }
 
 
