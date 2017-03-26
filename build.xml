@@ -1,4 +1,4 @@
-<project name="lab01"   basedir=".">
+<project name="lab01"   basedir="." default="jar">
     <description>
         lab01 build file
     </description>
