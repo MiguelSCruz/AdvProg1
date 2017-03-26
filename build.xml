@@ -1,62 +1,39 @@
-<project name="lab01"   basedir="." default="jar">
+<project name="Advance Programming - Project 1"   basedir="." default="jar">
     <description>
-        lab01 build file
+        Project 1 build file
     </description>
-    <!-- set global properties for this build -->
     <property name="src" value="src"/>
     <property name="classes" value="classes"/>
     <property name="pkg"    value="ist.meic.pa"/>
+    <property name="jarFile" value="keyConstructors.jar"/>
+    <property name="javassist" value="lib/javassist.jar"/>
 
 
-    <target name="clean"    description="clean">
+    <target name="clean" description="cleans">
         <!-- Delete the ${classes} directory trees -->
-        <delete dir="${classes}" file="keyword.jar"/>
+        <delete dir="${classes}" file="${jarFile}"/>
     </target>
 
-    <target name="init" depends="clean">
+    <target name="init" description="creates the necessary directories" depends="clean">
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the classes directory structure used by compile -->
         <mkdir dir="${classes}"/>
     </target>
 
-    <target name="compile"  description="compile the source"    depends="init">
+    <target name="compile"  description="compile the source code"    depends="init">
         <!-- Compile the java code from ${src} into ${classes} -->
-        <javac srcdir="${src}" destdir="${classes}" classpath="lib/javassist.jar"/>
+        <javac srcdir="${src}" destdir="${classes}" classpath="${javassist}"/>
 
     </target>
 
-    <target name="testsCompile"  description="compile the tests"    depends="compile">
-        <!-- Compile the java code from ${src} into ${classes} -->
-        <javac srcdir="Tests" destdir="Tests" classpath="${classes}"/>
-
-    </target>
-
-
-
-    <target name="run"  description="runs the program"  depends="compile">
-        <!-- Run the java app -->
-        <java classname="${pkg}.KeyConstructors">
-            <classpath>
-                <pathelement path="${classes}:lib/javassist.jar"/>
-            </classpath>
-            <arg value="TestA"/>
-        </java>
-    </target>
-
-    <target name="jar" depends="compile">
-        <jar destfile="keyword.jar" basedir="classes">
+    <target name="jar" description="creates the jar file" depends="compile">
+        <jar destfile="${jarFile}" basedir="classes">
             <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="${pkg}.KeyConstructors"/>
             </manifest>
         </jar>
     </target>
-
-    <target name="runJar" depends="jar">
-        <java jar="keyword.jar" fork="true">
-            <arg line="TestA"/>
-        </java>
-    </target>
-
+begining
 </project>

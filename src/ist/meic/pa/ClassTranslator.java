@@ -3,6 +3,7 @@ package ist.meic.pa;
 import javassist.*;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import static javassist.CtNewConstructor.defaultConstructor;
@@ -42,6 +43,7 @@ public class ClassTranslator implements Translator {
 
         KeywordArgs annotation;
         Map<String, String> pairs = new HashMap<>();
+        LinkedList<String> sortedArgs = new LinkedList<>();
         String template= "{";
 
         while (ctClass != null) {
@@ -50,13 +52,14 @@ public class ClassTranslator implements Translator {
                     annotation = (KeywordArgs) constructor.getAnnotation(KeywordArgs.class);
                     String value = annotation.value();
                     annotationParser(value, pairs);
+                    sortedArgs = argsSorter(pairs);
                 }
             }
             ctClass = ctClass.getSuperclass();
         }
 
         if (!pairs.isEmpty()) {
-            for (String s : pairs.keySet()) {
+            for (String s : sortedArgs) {
                 if (pairs.get(s) != null) {
                     template = template + s + "=" + pairs.get(s) + ";\n";
                 }
@@ -101,4 +104,27 @@ public class ClassTranslator implements Translator {
         }
     }
 
+    public LinkedList<String> argsSorter(Map<String, String> pairs){
+        LinkedList<String> result = new LinkedList<>();
+
+        for (String s: pairs.keySet()){
+            if (pairs.containsKey(pairs.get(s))){
+                result.addLast(s);
+            }
+            else
+                result.addFirst(s);
+        }
+
+        for (String s: result){
+            int leftIndex = result.indexOf(s);
+            int rightIndex = result.indexOf(pairs.get(s));
+            if ( leftIndex < rightIndex ){
+                String aux = pairs.get(s);
+                result.set(rightIndex, s);
+                result.set(leftIndex, aux);
+            }
+        }
+
+        return result;
+    }
 }
