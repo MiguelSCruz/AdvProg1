@@ -107,24 +107,21 @@ public class ClassTranslator implements Translator {
     public LinkedList<String> argsSorter(Map<String, String> pairs){
         LinkedList<String> result = new LinkedList<>();
 
-        for (String s: pairs.keySet()){
-            if (pairs.containsKey(pairs.get(s))){
-                result.addLast(s);
-            }
-            else
-                result.addFirst(s);
-        }
-
-        for (String s: result){
-            int leftIndex = result.indexOf(s);
-            int rightIndex = result.indexOf(pairs.get(s));
-            if ( leftIndex < rightIndex ){
-                String aux = pairs.get(s);
-                result.set(rightIndex, s);
-                result.set(leftIndex, aux);
+        result.addAll(pairs.keySet());
+        boolean changed = true;
+        while (changed){
+            changed=false;
+            for (String s : result) {
+                int leftIndex = result.indexOf(s);
+                int rightIndex = result.indexOf(pairs.get(s)); //indexOf return -1 if there is not any match
+                if (leftIndex < rightIndex) {
+                    String aux = pairs.get(s);
+                    result.set(rightIndex, s);
+                    result.set(leftIndex, aux);
+                    changed = true;
+                }
             }
         }
-
         return result;
     }
 }
